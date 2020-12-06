@@ -10,7 +10,7 @@ class Cards:
 
     def change_face(self):
         """ flips the card over (toggle face up or down) """
-        pass
+        self.face_up = not self.face_up
 
     def set_card_color(self, suit):
         """ sets the card's color based on its suit """

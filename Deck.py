@@ -1,16 +1,16 @@
 from Card import Cards
+import random
 
 class Deck():
     """ deck made up of playing cards """
     def __init__(self):
         """ a deck is made up of 52 playing cards, contains all the cards, and has a boolean state of whether or not it is shuffled"""
-        self.__amount = 52
         self.deck = []
         self._is_shuffled = False
 
     def shuffle(self):
         """ shuffles all 52 cards """
-        pass
+        random.shuffle(self.deck)
 
     def build_deck(self):
         """ builds out the entire deck"""
@@ -31,6 +31,7 @@ class Deck():
 
 deck = Deck()
 deck.build_deck()
-print(deck.deck)
+deck.shuffle()
 for card in deck.deck:
     print(f'{card.suit} {card.rank} {card.color}')
+print(len(deck.deck))
