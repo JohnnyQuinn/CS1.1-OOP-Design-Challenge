@@ -9,6 +9,7 @@ class Game(Layout):
 
     def start_game(self):
         """ starts the game """
+        self.build_table()
         pass
 
     def commands(self):
