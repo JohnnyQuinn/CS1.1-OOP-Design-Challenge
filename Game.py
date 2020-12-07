@@ -4,26 +4,98 @@ class Game(Layout):
     """ manages and runs the game """
     def __init__(self):
         """ games has a state of running and whether or not the player has won"""
-        self.game_running = False
-        self.game_won = False
+        self.__game_running = False
+        self.__game_won = False
+
+    def run(self):
+        self.__game_running = True
+        self.messages("start")
+        while self.__game_running == True:
+            self.commands(input())
 
     def start_game(self):
         """ starts the game """
-        self.build_table()
+        layout = Layout()
+        layout.build_table()
+        self.render_table(layout.get_tables())
         pass
 
-    def commands(self):
+    def commands(self, input):
         """ takes in the user commands and reacts appropiately """
-        pass
+        if input == "quit":
+            self.__game_running = False
+        if input == "new game":
+            self.start_game()
+        
+    def render_tables(self, layout):
+        """ takes in the current card layout and renders the tables """
+        self.print_seperator()
+            
+    def render_table(self, *args):
+        """ takes in tables(1-7) and sorts them out to be printed to the terminal """
+        table_grid = []
+        tables = args[0]
 
-    def render(self):
-        """ renders the game in the terminal """
-        pass
+        for i in range(0, 49):
+            table_grid.append("    ")
+        for column in range(0, 7, 1):
+            stop = 42+column
+            i = 0
+            for row in range(column, stop, 7):
+                try:
+                    table_grid[row] = tables[column][i].get_card_string()
+                except:
+                    pass
+                i += 1
+
+        final_string = ""
+
+        for i in range(0, 49, 1):
+            final_string += table_grid[i]
+
+            if i != 0:
+                if (i % 7) == 0:
+                    final_string += "\n"
+
+        print(final_string)
+            
+        # for i in range(max_len):
+        #     for table in tables:
+        #         try:
+        #             if table[i].face_up == True:
+        #                 final_string += table[i].get_card_string()
+        #             elif table[i].face_up == False:
+        #                 final_string += "[??]"
+        #         except:
+        #             pass
+        #     final_string += "\n"
+        # print(final_string)
+        
+            
+
+
 
     def games_master(self):
         """ manages the rules of the game """
         pass
 
-    def messages(self):
+    def messages(self, message):
         """ manages the messages and prompts for the user """
-        pass
+        if message == "start":
+            print("\n\n")
+            print("- * Welcome to Terminal Solitaire! * -")
+            self.print_seperator()
+            print("new game | to start new game")
+            print("quit     | to quit")
+            self.print_seperator()
+            print("Type a command to continue:")
+
+    def print_seperator(self):
+        print("----------------------------------")
+
+    print("[??]         [  ][  ][  ][  ]")
+    print(" (1) (2) (3) (4) (5) (6) (7)")
+    print("[  ][  ][  ][  ][  ][  ][  ]")
+
+game = Game()
+game.run()

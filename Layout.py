@@ -18,7 +18,7 @@ class Layout:
         self.pile = [] 
     
     def build_table(self):
-        """ places the initial cards in the tables """
+        """ places the initial cards in the tables (28 cards) and puts the rest in the pile (24 cards) """
         deckObj = Deck()
         deckObj.build_deck()
         game_deck = deckObj.main_deck
@@ -30,6 +30,9 @@ class Layout:
         self.__from_deck_to_table(game_deck, self.table5, 5)
         self.__from_deck_to_table(game_deck, self.table6, 6)
         self.__from_deck_to_table(game_deck, self.table7, 7)
+
+        self.pile += game_deck
+        game_deck.clear()
 
     def manage_table(self, number):
         """ manages an individual table"""
@@ -55,7 +58,9 @@ class Layout:
         
         table[-1].change_face()
 
-        
+    def get_tables(self):
+        """ returns all the tables(1-7) in a list"""
+        return [self.table1, self.table2, self.table3, self.table4, self.table5, self.table6, self.table7]
 
 layout = Layout()
 layout.build_table()

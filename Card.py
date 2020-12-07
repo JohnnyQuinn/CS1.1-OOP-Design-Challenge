@@ -22,3 +22,7 @@ class Cards:
             self.color = "R"
         elif suit == "D":
             self.color = "R"
+    
+    def get_card_string(self):
+        """ returns a string to simulate a card in the format of: '[SR]'. (S = suit, R = rank)"""
+        return f'[{self.suit}{str(self.rank)}]'
