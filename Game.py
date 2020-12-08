@@ -9,38 +9,51 @@ class Game(Layout):
         self.__current_pile_card = ""
 
     def run(self):
-        self.__game_running = True
         self.messages("start")
+        self.commands(input())
         while self.__game_running == True:
             self.commands(input())
 
     def start_game(self):
         """ starts the game """
+        self.__game_running = True
         layout = Layout()
         layout.build_table()
         pile = layout.pile
         self.render_layout(layout.get_tables(), pile=pile)
         pass
 
-    def commands(self, input):
+    def commands(self, user_input):
         """ takes in the user commands and reacts appropiately """
-        if input == "quit":
-            self.__game_running = False
-        if input == "new game":
-            self.start_game()
+        if user_input == "quit":
+            if self.__game_running == True:
+                user_response = input("\nAre you sure you want to quit? (yes/no):\n")
+                if user_response == "yes":
+                    self.__game_running = False
+                elif user_response == "no":
+                    self.messages("enter cmd")
+        if user_input == "new game":
+            if self.__game_running == True:
+                user_response = input("\nAre you sure you want to start a new game? (yes/no):\n")
+                if user_response == "yes":
+                    self.start_game()
+                elif user_response == "no":
+                    self.messages("enter cmd")
+            else:
+                self.start_game()
             
     def render_layout(self, *args, pile):
         """ renders layout of pile, foundations, and tables. Takes in tables(1-7) and sorts them out to be printed to the terminal. """
         print("\n\n\n\n")
         self.messages("legend")
         self.print_seperator()
-        print("Pile:                      (1) (2) (3) (4)       <- Foundations")
+        print("Pile:                       (1)  (2)  (3)  (4)         <- Foundations")
 
         #renders pile card
-        print("[XX]" + self.__current_pile_card + "                       [ ] [ ] [ ] [ ]")
+        print("[XX]" + self.__current_pile_card + "                       [  ] [  ] [  ] [  ]")
 
         self.print_seperator()
-        print("(1)     (2)    (3)    (4)    (5)    (6)    (7)   <- Tables")
+        print("(1)     (2)    (3)    (4)    (5)    (6)    (7)         <- Tables")
         self.print_seperator()
 
         table_grid = []
@@ -74,6 +87,7 @@ class Game(Layout):
             table_grid_string += table_grid[i] + "   "
 
         print(table_grid_string)
+        self.messages("enter cmd")
     
 
     def games_master(self):
@@ -82,6 +96,7 @@ class Game(Layout):
 
     def messages(self, message):
         """ manages the messages and prompts for the user """
+        #initial message to user
         if message == "start":
             print("\n\n")
             print("- * Welcome to Terminal Solitaire! * -")
@@ -90,8 +105,12 @@ class Game(Layout):
             print("quit     | to quit")
             self.print_seperator()
             print("Type a command to continue:")
+        #legend for what symbols mean
         if message == "legend":
-            print("[XX] = Face down card\n[ ] = empty space")
+            print("[XX] = Face down card\n[  ] = empty space")
+        #message for user to enter command
+        if message == "enter cmd":
+            print("\n(Type 'help' for list of commands)\nEnter command:")
 
     @staticmethod
     def print_seperator():
