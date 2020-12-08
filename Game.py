@@ -6,6 +6,7 @@ class Game(Layout):
         """ games has a state of running and whether or not the player has won"""
         self.__game_running = False
         self.__game_won = False
+        self.__current_pile_card = ""
 
     def run(self):
         self.__game_running = True
@@ -17,7 +18,8 @@ class Game(Layout):
         """ starts the game """
         layout = Layout()
         layout.build_table()
-        self.render_table(layout.get_tables())
+        pile = layout.pile
+        self.render_layout(layout.get_tables(), pile=pile)
         pass
 
     def commands(self, input):
@@ -27,8 +29,20 @@ class Game(Layout):
         if input == "new game":
             self.start_game()
             
-    def render_table(self, *args):
-        """ takes in tables(1-7) and sorts them out to be printed to the terminal """
+    def render_layout(self, *args, pile):
+        """ renders layout of pile, foundations, and tables. Takes in tables(1-7) and sorts them out to be printed to the terminal. """
+        print("\n\n\n\n")
+        self.messages("legend")
+        self.print_seperator()
+        print("Pile:                      (1) (2) (3) (4)       <- Foundations")
+
+        #renders pile card
+        print("[XX]" + self.__current_pile_card + "                       [ ] [ ] [ ] [ ]")
+
+        self.print_seperator()
+        print("(1)     (2)    (3)    (4)    (5)    (6)    (7)   <- Tables")
+        self.print_seperator()
+
         table_grid = []
         tables = args[0]
 
@@ -50,16 +64,16 @@ class Game(Layout):
                     pass
                 i += 1
 
-        final_string = ""
-
+        #goes through table_grid and adds cards, line breaks, and spacing to table_grid_string
+        table_grid_string = ""
         for i in range(0, 49, 1):
             if i != 0:
                 if (i % 7) == 0:
-                    final_string += "\n"
+                    table_grid_string += "\n"
 
-            final_string += table_grid[i] + "   "
+            table_grid_string += table_grid[i] + "   "
 
-        print(final_string)
+        print(table_grid_string)
     
 
     def games_master(self):
@@ -76,9 +90,12 @@ class Game(Layout):
             print("quit     | to quit")
             self.print_seperator()
             print("Type a command to continue:")
+        if message == "legend":
+            print("[XX] = Face down card\n[ ] = empty space")
 
-    def print_seperator(self):
-        print("----------------------------------")
+    @staticmethod
+    def print_seperator():
+        print("---------------------------------------------------------------------")
 
 game = Game()
-game.start_game()
+game.run()
