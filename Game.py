@@ -42,7 +42,10 @@ class Game(Layout):
             i = 0
             for row in range(column, stop, 7):
                 try:
-                    table_grid[row] = tables[column][i].get_card_string()
+                    if tables[column][i].face_up == True:
+                        table_grid[row] = tables[column][i].get_card_string()
+                    elif tables[column][i].face_up == False:
+                        table_grid[row] = "[XX]"
                 except:
                     pass
                 i += 1
@@ -54,7 +57,7 @@ class Game(Layout):
                 if (i % 7) == 0:
                     final_string += "\n"
 
-            final_string += table_grid[i] + " "
+            final_string += table_grid[i] + "   "
 
         print(final_string)
     
