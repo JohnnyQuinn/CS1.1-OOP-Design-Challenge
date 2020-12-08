@@ -32,10 +32,3 @@ class Deck():
             card.set_card_color(suit)
             suit_deck.append(card)
         self.main_deck += suit_deck
-
-# deck = Deck()
-# deck.build_deck()
-# deck.shuffle()
-# for card in deck.deck:
-#     print(f'{card.suit} {card.rank} {card.color}')
-# print(len(deck.deck))

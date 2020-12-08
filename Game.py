@@ -36,6 +36,7 @@ class Game(Layout):
         table_grid = []
         tables = args[0]
 
+        # creates a list consis
         for i in range(0, 49):
             table_grid.append("    ")
         for column in range(0, 7, 1):
@@ -49,30 +50,16 @@ class Game(Layout):
                 i += 1
 
         final_string = ""
+        print(table_grid)
 
         for i in range(0, 49, 1):
-            final_string += table_grid[i]
-
             if i != 0:
                 if (i % 7) == 0:
                     final_string += "\n"
 
-        print(final_string)
-            
-        # for i in range(max_len):
-        #     for table in tables:
-        #         try:
-        #             if table[i].face_up == True:
-        #                 final_string += table[i].get_card_string()
-        #             elif table[i].face_up == False:
-        #                 final_string += "[??]"
-        #         except:
-        #             pass
-        #     final_string += "\n"
-        # print(final_string)
-        
-            
+            final_string += table_grid[i] + " "
 
+        print(final_string)
 
 
     def games_master(self):
