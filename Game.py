@@ -25,19 +25,19 @@ class Game(Layout):
 
     def commands(self, user_input):
         """ takes in the user commands and reacts appropiately """
-        if user_input == "quit":
+        if "quit" in user_input:
             if self.__game_running == True:
                 user_response = input("\nAre you sure you want to quit? (yes/no):\n")
-                if user_response == "yes":
+                if "yes" in user_response:
                     self.__game_running = False
-                elif user_response == "no":
+                elif "no" in user_response:
                     self.messages("enter cmd")
-        if user_input == "new game":
+        if "new game" in user_input:
             if self.__game_running == True:
                 user_response = input("\nAre you sure you want to start a new game? (yes/no):\n")
-                if user_response == "yes":
+                if "yes" in user_response:
                     self.start_game()
-                elif user_response == "no":
+                elif "no" in user_response:
                     self.messages("enter cmd")
             else:
                 self.start_game()
@@ -47,13 +47,13 @@ class Game(Layout):
         print("\n\n\n\n")
         self.messages("legend")
         self.print_seperator()
-        print("Pile:                       (1)  (2)  (3)  (4)         <- Foundations")
+        print("Pile:                      (F1) (F2) (F3) (F4)         <- Foundations")
 
         #renders pile card
         print("[XX]" + self.__current_pile_card + "                       [  ] [  ] [  ] [  ]")
 
         self.print_seperator()
-        print("(1)     (2)    (3)    (4)    (5)    (6)    (7)         <- Tables")
+        print("(T1)   (T2)   (T3)   (T4)   (T5)   (T6)   (T7)         <- Tables")
         self.print_seperator()
 
         table_grid = []
@@ -107,7 +107,7 @@ class Game(Layout):
             print("Type a command to continue:")
         #legend for what symbols mean
         if message == "legend":
-            print("[XX] = Face down card\n[  ] = empty space")
+            print("[XX] = Face down card | C = Clubs | S = Spades\n[  ] = empty space    | H = Hearts| D = Diamonds")
         #message for user to enter command
         if message == "enter cmd":
             print("\n(Type 'help' for list of commands)\nEnter command:")

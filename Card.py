@@ -24,5 +24,18 @@ class Cards:
             self.color = "R"
     
     def get_card_string(self):
-        """ returns a string to simulate a card in the format of: '[SR]'. (S = suit, R = rank)"""
-        return f'[{self.suit}{str(self.rank)}]'
+        """ returns a string to simulate a card in the format of: '[SR]'. (S = suit, R = rank).
+            If rank is A, J, Q, K then rank is converted into letter"""
+        rank = ""
+        if self.rank < 1 or self.rank > 10:
+            if self.rank == 0:
+                rank = "A"
+            elif self.rank == 11:
+                rank = "J"
+            elif self.rank == 12:
+                rank = "Q"
+            elif self.rank == 13:
+                rank = "K"
+        else:
+            rank = str(self.rank)
+        return f'[{self.suit}{rank}]'
