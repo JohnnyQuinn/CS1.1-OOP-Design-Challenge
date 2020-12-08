@@ -26,21 +26,19 @@ class Game(Layout):
             self.__game_running = False
         if input == "new game":
             self.start_game()
-        
-    def render_tables(self, layout):
-        """ takes in the current card layout and renders the tables """
-        self.print_seperator()
             
     def render_table(self, *args):
         """ takes in tables(1-7) and sorts them out to be printed to the terminal """
         table_grid = []
         tables = args[0]
 
-        # creates a list consis
+        # creates a list consisting of 49 empty spaces. Treated like a 7x7 grid
         for i in range(0, 49):
             table_grid.append("    ")
+
+        # populates table grid. Starts with column, then goes into each row of that column, then goes to next column. 
         for column in range(0, 7, 1):
-            stop = 42+column
+            stop = 43+column
             i = 0
             for row in range(column, stop, 7):
                 try:
@@ -50,7 +48,6 @@ class Game(Layout):
                 i += 1
 
         final_string = ""
-        print(table_grid)
 
         for i in range(0, 49, 1):
             if i != 0:
@@ -60,7 +57,7 @@ class Game(Layout):
             final_string += table_grid[i] + " "
 
         print(final_string)
-
+    
 
     def games_master(self):
         """ manages the rules of the game """
@@ -80,9 +77,5 @@ class Game(Layout):
     def print_seperator(self):
         print("----------------------------------")
 
-    print("[??]         [  ][  ][  ][  ]")
-    print(" (1) (2) (3) (4) (5) (6) (7)")
-    print("[  ][  ][  ][  ][  ][  ][  ]")
-
 game = Game()
-game.run()
+game.start_game()
