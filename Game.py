@@ -17,10 +17,10 @@ class Game(Layout):
     def start_game(self):
         """ starts the game """
         self.__game_running = True
+        global layout
         layout = Layout()
         layout.build_table()
-        pile = layout.pile
-        self.render_layout(layout.get_tables(), pile=pile)
+        self.render_layout()
         pass
 
     def commands(self, user_input):
@@ -41,23 +41,28 @@ class Game(Layout):
                     self.messages("enter cmd")
             else:
                 self.start_game()
-            
-    def render_layout(self, *args, pile):
+        # show next card in the pile
+        if "pile" in user_input:
+            layout.manage_pile("next card")
+            self.render_layout()
+     
+    def render_layout(self):
         """ renders layout of pile, foundations, and tables. Takes in tables(1-7) and sorts them out to be printed to the terminal. """
+        tables = layout.get_tables()
+
         print("\n\n\n\n")
         self.messages("legend")
         self.print_seperator()
         print("Pile:                      (F1) (F2) (F3) (F4)         <- Foundations")
 
         #renders pile card
-        print("[XX]" + self.__current_pile_card + "                       [  ] [  ] [  ] [  ]")
+        print("[XX]" + layout.manage_pile("current card") + "                   [  ] [  ] [  ] [  ]")
 
         self.print_seperator()
         print("(T1)   (T2)   (T3)   (T4)   (T5)   (T6)   (T7)         <- Tables")
         self.print_seperator()
 
         table_grid = []
-        tables = args[0]
 
         # creates a list consisting of 49 empty spaces. Treated like a 7x7 grid
         for i in range(0, 49):
@@ -88,7 +93,6 @@ class Game(Layout):
 
         print(table_grid_string)
         self.messages("enter cmd")
-    
 
     def games_master(self):
         """ manages the rules of the game """
@@ -107,7 +111,7 @@ class Game(Layout):
             print("Type a command to continue:")
         #legend for what symbols mean
         if message == "legend":
-            print("[XX] = Face down card | C = Clubs | S = Spades\n[  ] = empty space    | H = Hearts| D = Diamonds")
+            print("[XX] = Face down card | C = Clubs | S = Spades  | A = Ace   | K = King\n[  ] = empty space    | H = Hearts| D = Diamonds| Q = Queen | J = Jack")
         #message for user to enter command
         if message == "enter cmd":
             print("\n(Type 'help' for list of commands)\nEnter command:")

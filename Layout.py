@@ -42,9 +42,13 @@ class Layout:
         """ manages an individual foundation """
         pass
 
-    def manage_pile(self):
+    def manage_pile(self, cmd):
         """ manages the pile """
-        pass
+        #moves card in the front (index 0) to back (index -1)
+        if "next card" in cmd:
+            self.pile.insert(len(self.pile), self.pile.pop(0))
+        if "current card" in cmd:
+            return self.pile[0].get_card_string()
     
     @staticmethod
     def __from_deck_to_table(deck, table, amount):
@@ -64,3 +68,4 @@ class Layout:
 
 layout = Layout()
 layout.build_table()
+

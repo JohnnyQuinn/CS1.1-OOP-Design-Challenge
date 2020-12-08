@@ -38,4 +38,4 @@ class Cards:
                 rank = "K"
         else:
             rank = str(self.rank)
-        return f'[{self.suit}{rank}]'
+        return f'[{rank}{self.suit}]'
