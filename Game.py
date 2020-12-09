@@ -54,8 +54,28 @@ class Game(Layout):
 
     def render_layout(self):
         """ renders layout of pile, foundations, and tables. Takes in tables(1-7) and sorts them out to be printed to the terminal. """
-       
+        #saves all tables to tables
         tables = layout.get_tables()
+
+        #for when the table_grid needs more rows
+        table_grid_extension = 0
+
+        table_grid_max = 49
+
+        #gets the largest table length
+        max_table_len = len(tables[0])
+        for table in tables:
+            if len(table) > max_table_len:
+                max_table_len = len(table)
+        print(f'max_length_len: {max_table_len}')
+        #sets the amount of rows needed to be added if there is a table with more than 7
+        if max_table_len > 7:
+            table_grid_extension = max_table_len - 7
+            table_grid_extension *= 7
+            table_grid_max += table_grid_extension
+            print(f'table_grid_extension: {table_grid_extension}')
+            print(f'table_grid_max: {table_grid_max}')
+
 
         print("\n\n\n\n")
         self.messages("legend")
@@ -72,14 +92,14 @@ class Game(Layout):
         table_grid = []
 
         # creates a list consisting of 49 empty spaces. Treated like a 7x7 grid
-        for i in range(0, 49):
+        for i in range(0, table_grid_max):
             table_grid.append("    ")
 
         # populates table grid. Starts with column, then goes into each row of that column, then goes to next column. 
         for column in range(0, 7, 1):
             stop = 43+column
             i = 0
-            for row in range(column, stop, 7):
+            for row in range(column, stop+table_grid_extension, 7):
                 try:
                     if tables[column][i].face_up == True:
                         table_grid[row] = tables[column][i].get_card_string()
@@ -91,7 +111,7 @@ class Game(Layout):
 
         #goes through table_grid and adds cards, line breaks, and spacing to table_grid_string
         table_grid_string = ""
-        for i in range(0, 49, 1):
+        for i in range(0, table_grid_max, 1):
             if i != 0:
                 if (i % 7) == 0:
                     table_grid_string += "\n"
