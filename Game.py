@@ -21,7 +21,6 @@ class Game(Layout):
         layout = Layout()
         layout.build_table()
         self.render_layout()
-        pass
 
     def commands(self, user_input):
         """ takes in the user commands and reacts appropiately """
@@ -42,12 +41,20 @@ class Game(Layout):
             else:
                 self.start_game()
         # show next card in the pile
-        if "pile" in user_input:
+        if "next pile" in user_input:
             layout.manage_pile("next card")
             self.render_layout()
-     
+        #moves card from one location to another
+        if "mv" in user_input and "to" in user_input:
+            #splits user_input string into list 
+            mv_cmd_list = list(user_input.split(" "))
+            origin = mv_cmd_list[1]
+            destination = mv_cmd_list[3]
+            self.games_master(origin, destination)
+
     def render_layout(self):
         """ renders layout of pile, foundations, and tables. Takes in tables(1-7) and sorts them out to be printed to the terminal. """
+       
         tables = layout.get_tables()
 
         print("\n\n\n\n")
@@ -94,9 +101,25 @@ class Game(Layout):
         print(table_grid_string)
         self.messages("enter cmd")
 
-    def games_master(self):
+    def games_master(self, origin, destination):
         """ manages the rules of the game """
-        pass
+        origin_list = layout.translate_cmd(origin)
+        destination_list = layout.translate_cmd(destination)
+        origin_card = origin_list[-1]
+        destination_card = destination_list[-1]
+
+        print(f'Last move:\n{origin_card.get_card_string()} -> {destination_card.get_card_string()}')
+
+        if origin_card.color == destination_card.color:
+            self.messages("illegal")
+        else:
+            if origin_card.rank > destination_card.rank:
+                self.messages("illegal")
+            elif destination_card.rank - origin_card.rank != 1:
+                self.messages("illegal")
+            else:
+                layout.move_card(origin, destination)
+                self.render_layout()
 
     def messages(self, message):
         """ manages the messages and prompts for the user """
@@ -115,7 +138,9 @@ class Game(Layout):
         #message for user to enter command
         if message == "enter cmd":
             print("\n(Type 'help' for list of commands)\nEnter command:")
-
+        if message == "illegal":
+            print("Illegal move. Please try again.")
+            self.messages("enter cmd")
     @staticmethod
     def print_seperator():
         print("---------------------------------------------------------------------")

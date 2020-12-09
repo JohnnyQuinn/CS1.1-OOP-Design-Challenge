@@ -44,11 +44,12 @@ class Layout:
 
     def manage_pile(self, cmd):
         """ manages the pile """
-        #moves card in the front (index 0) to back (index -1)
+        #moves card in the front (index -1) to back (index 0)
         if "next card" in cmd:
-            self.pile.insert(len(self.pile), self.pile.pop(0))
+            self.pile.insert(0, self.pile.pop(-1))
         if "current card" in cmd:
-            return self.pile[0].get_card_string()
+            self.pile[-1].change_face()
+            return self.pile[-1].get_card_string()
     
     @staticmethod
     def __from_deck_to_table(deck, table, amount):
@@ -62,10 +63,31 @@ class Layout:
         
         table[-1].change_face()
 
+    def translate_cmd(self, cmd):
+        if "t" in cmd:
+            for i in range(1, 8, 1):
+                if str(i) in cmd:
+                    return self.get_tables()[i - 1]
+        if "f" in cmd:
+            for i in range(1, 5, 1):
+                if str(i) in cmd:
+                    return self.get_foundations()[i - 1]
+        if "pile" in cmd:
+            return self.pile
+
+
     def get_tables(self):
         """ returns all the tables(1-7) in a list"""
         return [self.table1, self.table2, self.table3, self.table4, self.table5, self.table6, self.table7]
-
+    
+    def get_foundations(self):
+        return [self.foundation1, self.foundation2, self.foundation3, self.foundation4]
+    
+    def move_card(self, origin, destination):
+        self.translate_cmd(destination).append(self.translate_cmd(origin)[-1])
+        self.translate_cmd(origin).remove(self.translate_cmd(origin)[-1])
+        self.translate_cmd(origin)[len(self.translate_cmd(origin)) - 1].change_face()
+    
 layout = Layout()
 layout.build_table()
 

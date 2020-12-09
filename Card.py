@@ -1,7 +1,7 @@
 class Cards:
     """ playing cards """
     def __init__(self, suit, rank):
-        """ each card has a suit(clubs, spades, hearts, diamonds), rank(K, Q, J, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, A) represented by numbers (13-0), 
+        """ each card has a suit(clubs, spades, hearts, diamonds), rank(K, Q, J, 10, 9, 8, 7, 6, 5, 4, 3, 2, A) represented by numbers (12-1), 
             color (clubs and spades are black, hearts and diamonds are red), and boolen of whether the card is face up or down """
         self.suit = suit
         self.rank = rank
@@ -25,10 +25,10 @@ class Cards:
     
     def get_card_string(self):
         """ returns a string to simulate a card in the format of: '[RS]'. (R = rank, S = suit).
-            If rank is 0, 11, 12, 13 then rank is converted into letter rank (A, J, Q, K)"""
+            If rank is 1, 11, 12, 13 then rank is converted into letter rank (A, J, Q, K)"""
         rank = ""
-        if self.rank < 1 or self.rank > 10:
-            if self.rank == 0:
+        if self.rank < 2 or self.rank > 10:
+            if self.rank == 1:
                 rank = "A"
             elif self.rank == 11:
                 rank = "J"

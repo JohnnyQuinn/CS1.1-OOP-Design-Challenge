@@ -25,9 +25,9 @@ class Deck():
 
     
     def __build_suit(self, suit):
-        """ creates a set of cards that consists of all the ranks of a particular suit """
+        """ creates a set of cards that consists of all the ranks of a particular suit and also sets color of cards """
         suit_deck = []
-        for i in range(13):
+        for i in range(1, 14):
             card = Cards(suit, rank = i)
             card.set_card_color(suit)
             suit_deck.append(card)
