@@ -8,7 +8,7 @@ class Cards:
         self.color = "" 
         self.face_up = False 
 
-    def change_face(self):
+    def change_face(self): 
         """ flips the card over (toggle face up or down) """
         self.face_up = not self.face_up
 

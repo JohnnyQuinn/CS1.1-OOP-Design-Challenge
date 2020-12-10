@@ -54,11 +54,7 @@ class Layout:
 
     def manage_foundation(self, foundation):
         """ manages an individual foundation """
-        try:
-            card = self.get_foundations()[foundation - 1][-1].get_card_string()
-        except:
-            card = "  "
-        return card
+        pass
 
     def manage_pile(self, cmd):
         """ manages the pile """

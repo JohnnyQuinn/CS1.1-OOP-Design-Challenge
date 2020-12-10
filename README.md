@@ -3,3 +3,6 @@ Play solitaire completely in the terminal. The game is rendered in the terminal 
 
 ## Game Start Screen
 ![Solitaire game start screen](/screenshots/solitaire_game_start.png)
+
+## MRO Diagram
+![Diagram](/screenshots/diagram.png)

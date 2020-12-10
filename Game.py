@@ -6,7 +6,13 @@ class Game(Layout):
         """ games has a state of running and whether or not the player has won"""
         self.__game_running = False
         self.__game_won = False
-        self.__current_pile_card = ""
+
+    def manage_foundation(self, foundation):
+        try:
+            card = layout.get_foundations()[foundation - 1][-1].get_card_string()
+        except:
+            card = "  "
+        return card
 
     def run(self):
         self.messages("start")
@@ -79,7 +85,6 @@ class Game(Layout):
         for table in tables:
             if len(table) > max_table_len:
                 max_table_len = len(table)
-        print(f'max_length_len: {max_table_len}')
         #sets the amount of rows needed to be added if there is a table with more than 7
         if max_table_len > 7:
             table_grid_extension = max_table_len - 7
@@ -94,7 +99,7 @@ class Game(Layout):
         print("Pile:                      (F1) (F2) (F3) (F4)         <- Foundations")
 
         #renders pile card
-        print("[XX]" + layout.manage_pile("current card") + f"                  {layout.manage_foundation(1)} {layout.manage_foundation(2)} {layout.manage_foundation(3)} {layout.manage_foundation(4)}")
+        print("[XX]" + layout.manage_pile("current card") + f"                  {self.manage_foundation(1)} {self.manage_foundation(2)} {self.manage_foundation(3)} {self.manage_foundation(4)}")
 
         self.print_seperator()
         print("(T1)   (T2)   (T3)   (T4)   (T5)   (T6)   (T7)         <- Tables")
@@ -228,8 +233,4 @@ class Game(Layout):
     @staticmethod
     def print_seperator():
         print("---------------------------------------------------------------------")
-
-    @staticmethod
-    def spell_checker():
-        pass
 

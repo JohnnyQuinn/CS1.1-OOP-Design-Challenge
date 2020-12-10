@@ -13,6 +13,7 @@ class Deck():
         for i in range(3):
             random.shuffle(self.main_deck)
             i += 1
+        self._is_shuffled = True
         
 
     def build_deck(self):
