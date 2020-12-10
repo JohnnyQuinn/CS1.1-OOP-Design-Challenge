@@ -3,10 +3,10 @@ class Cards:
     def __init__(self, suit, rank):
         """ each card has a suit(clubs, spades, hearts, diamonds), rank(K, Q, J, 10, 9, 8, 7, 6, 5, 4, 3, 2, A) represented by numbers (12-1), 
             color (clubs and spades are black, hearts and diamonds are red), and boolen of whether the card is face up or down """
-        self.suit = suit
-        self.rank = rank
-        self.color = ""
-        self.face_up = False
+        self.suit = suit #string
+        self.rank = rank #int
+        self.color = "" 
+        self.face_up = False 
 
     def change_face(self):
         """ flips the card over (toggle face up or down) """

@@ -41,16 +41,28 @@ class Game(Layout):
             else:
                 self.start_game()
         # show next card in the pile
-        if "next pile" in user_input:
+        if "np" in user_input:
             layout.manage_pile("next card")
             self.render_layout()
         #moves card from one location to another
         if "mv" in user_input and "to" in user_input:
             #splits user_input string into list 
             mv_cmd_list = list(user_input.split(" "))
+            play = mv_cmd_list[0]
             origin = mv_cmd_list[1]
             destination = mv_cmd_list[3]
-            self.games_master(origin, destination)
+            self.games_master(play, origin, destination)
+        #moves a group of cards from one location to another
+        if "mvg" in user_input:
+            mvg_cmd_list = list(user_input.split(" "))
+            play = mvg_cmd_list[0]
+            table = mvg_cmd_list[1]
+            top_card = mvg_cmd_list[2]
+            destination = mvg_cmd_list[4]
+            self.games_master(play, table, top_card, destination)
+        #get list of commands 
+        if "help" in user_input:
+            self.messages("help")
 
     def render_layout(self):
         """ renders layout of pile, foundations, and tables. Takes in tables(1-7) and sorts them out to be printed to the terminal. """
@@ -76,14 +88,13 @@ class Game(Layout):
             print(f'table_grid_extension: {table_grid_extension}')
             print(f'table_grid_max: {table_grid_max}')
 
-
         print("\n\n\n\n")
         self.messages("legend")
         self.print_seperator()
         print("Pile:                      (F1) (F2) (F3) (F4)         <- Foundations")
 
         #renders pile card
-        print("[XX]" + layout.manage_pile("current card") + "                   [  ] [  ] [  ] [  ]")
+        print("[XX]" + layout.manage_pile("current card") + f"                   {layout.get_last_foundation_card(1)} {layout.get_last_foundation_card(2)} {layout.get_last_foundation_card(3)} {layout.get_last_foundation_card(4)}")
 
         self.print_seperator()
         print("(T1)   (T2)   (T3)   (T4)   (T5)   (T6)   (T7)         <- Tables")
@@ -121,25 +132,68 @@ class Game(Layout):
         print(table_grid_string)
         self.messages("enter cmd")
 
-    def games_master(self, origin, destination):
+    def games_master(self, play, origin, destination, group_destination = ""):
         """ manages the rules of the game """
-        origin_list = layout.translate_cmd(origin)
-        destination_list = layout.translate_cmd(destination)
-        origin_card = origin_list[-1]
-        destination_card = destination_list[-1]
-
-        print(f'Last move:\n{origin_card.get_card_string()} -> {destination_card.get_card_string()}')
-
-        if origin_card.color == destination_card.color:
-            self.messages("illegal")
-        else:
-            if origin_card.rank > destination_card.rank:
-                self.messages("illegal")
-            elif destination_card.rank - origin_card.rank != 1:
-                self.messages("illegal")
+        print(origin)
+        print(destination)
+        #checks if the play is to move a card
+        if play == "mv":
+            origin_list = layout.translate_cmd(origin)
+            destination_list = layout.translate_cmd(destination)
+            origin_card = origin_list[-1]
+            destination_card = destination_list[-1]
+            try:
+                print(f'Last move:\n{origin_card.get_card_string()} -> {destination_card.get_card_string()}')
+            except:
+                pass
+            #checking if the origin or the destination is not a foundation table
+            if "f" not in origin and "f" not in destination:
+                if origin_card.color == destination_card.color:
+                    self.messages("illegal")
+                else:
+                    if origin_card.rank > destination_card.rank:
+                        self.messages("illegal")
+                    elif destination_card.rank - origin_card.rank != 1:
+                        self.messages("illegal")
+                    else:
+                        layout.move_card(origin, destination)
+                        self.render_layout()
+            #if origin or destination is a foundation table
             else:
-                layout.move_card(origin, destination)
-                self.render_layout()
+                if destination_card != "  ":
+                    if origin_card.color != destination_card.color:
+                        self.messages("illegal")
+                    else:
+                        if origin_card.rank < destination_card.rank:
+                            self.messages("illegal")
+                        elif origin_card.rank - destination_card.rank != 1:
+                            self.messages("illegal")
+                        else:
+                            layout.move_card(origin, destination)
+                            self.render_layout()
+                else:
+                    layout.move_card(origin, destination)
+                    self.render_layout()
+        #checks if the play is to move a group of cards
+        elif play == "mvg":
+            if "f" in group_destination or "pile" in group_destination:
+                self.messages("illegal")
+                return
+            else:
+                destination_table = layout.translate_cmd(group_destination)
+                destination_card = destination_table[-1]
+            origin_table = layout.translate_cmd(origin)
+            top_card = layout.translate_cmd(destination)
+            if top_card.color == destination_card.color:
+                    self.messages("illegal")
+            else:
+                if top_card.rank > destination_card.rank:
+                    self.messages("illegal")
+                elif destination_card.rank - origin_card.rank != 1:
+                    self.messages("illegal")
+                else:
+                    layout.move_group(origin_table, top_card, destination_table)
+                    self.render_layout()
 
     def messages(self, message):
         """ manages the messages and prompts for the user """
@@ -161,6 +215,8 @@ class Game(Layout):
         if message == "illegal":
             print("Illegal move. Please try again.")
             self.messages("enter cmd")
+        if message == "help":
+            print("\nnew game                     | to start new game\nquit                         | to quit game\nmv (origin) to (destination) | to move card\nnp                          | to get next pile card")
     @staticmethod
     def print_seperator():
         print("---------------------------------------------------------------------")

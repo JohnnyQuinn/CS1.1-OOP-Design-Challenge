@@ -5,8 +5,8 @@ class Deck():
     """ deck made up of playing cards """
     def __init__(self):
         """ a deck is made up of 52 playing cards, contains all the cards, and has a boolean state of whether or not it is shuffled"""
-        self.main_deck = []
-        self._is_shuffled = False
+        self.main_deck = [] 
+        self._is_shuffled = False 
 
     def __shuffle(self):
         """ shuffles all 52 cards 3 times over """
