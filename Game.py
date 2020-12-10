@@ -45,7 +45,7 @@ class Game(Layout):
             layout.manage_pile("next card")
             self.render_layout()
         #moves card from one location to another
-        if "mv" in user_input and "to" in user_input:
+        if "mv " in user_input and " to " in user_input:
             #splits user_input string into list 
             mv_cmd_list = list(user_input.split(" "))
             play = mv_cmd_list[0]
@@ -53,7 +53,7 @@ class Game(Layout):
             destination = mv_cmd_list[3]
             self.games_master(play, origin, destination)
         #moves a group of cards from one location to another
-        if "mvg" in user_input:
+        if "mvg " in user_input and " to " in user_input:
             mvg_cmd_list = list(user_input.split(" "))
             play = mvg_cmd_list[0]
             table = mvg_cmd_list[1]
@@ -94,7 +94,7 @@ class Game(Layout):
         print("Pile:                      (F1) (F2) (F3) (F4)         <- Foundations")
 
         #renders pile card
-        print("[XX]" + layout.manage_pile("current card") + f"                   {layout.get_last_foundation_card(1)} {layout.get_last_foundation_card(2)} {layout.get_last_foundation_card(3)} {layout.get_last_foundation_card(4)}")
+        print("[XX]" + layout.manage_pile("current card") + f"                  {layout.manage_foundation(1)} {layout.manage_foundation(2)} {layout.manage_foundation(3)} {layout.manage_foundation(4)}")
 
         self.print_seperator()
         print("(T1)   (T2)   (T3)   (T4)   (T5)   (T6)   (T7)         <- Tables")
@@ -141,23 +141,31 @@ class Game(Layout):
             origin_list = layout.translate_cmd(origin)
             destination_list = layout.translate_cmd(destination)
             origin_card = origin_list[-1]
-            destination_card = destination_list[-1]
             try:
+                destination_card = destination_list[-1]
                 print(f'Last move:\n{origin_card.get_card_string()} -> {destination_card.get_card_string()}')
             except:
                 pass
             #checking if the origin or the destination is not a foundation table
             if "f" not in origin and "f" not in destination:
-                if origin_card.color == destination_card.color:
-                    self.messages("illegal")
-                else:
-                    if origin_card.rank > destination_card.rank:
-                        self.messages("illegal")
-                    elif destination_card.rank - origin_card.rank != 1:
+                #check if destination table is empty
+                if len(destination_list) != 0:
+                    if origin_card.color == destination_card.color:
                         self.messages("illegal")
                     else:
-                        layout.move_card(origin, destination)
-                        self.render_layout()
+                        if origin_card.rank > destination_card.rank:
+                            self.messages("illegal")
+                        elif destination_card.rank - origin_card.rank != 1:
+                            self.messages("illegal")
+                        else:
+                            layout.move_card(origin_list, destination_list)
+                            self.render_layout()
+                #if destination table is empty, check if origin card is king
+                elif "K" in origin_card.get_card_string():
+                    layout.move_card(origin_list, destination_list)
+                    self.render_layout()
+                elif "K" not in origin_card.get_card_string():
+                    self.messages("illegal")
             #if origin or destination is a foundation table
             else:
                 if destination_card != "  ":
@@ -169,10 +177,10 @@ class Game(Layout):
                         elif origin_card.rank - destination_card.rank != 1:
                             self.messages("illegal")
                         else:
-                            layout.move_card(origin, destination)
+                            layout.move_card(origin_list, destination_list)
                             self.render_layout()
                 else:
-                    layout.move_card(origin, destination)
+                    layout.move_card(origin_list, destination_list)
                     self.render_layout()
         #checks if the play is to move a group of cards
         elif play == "mvg":
@@ -208,7 +216,7 @@ class Game(Layout):
             print("Type a command to continue:")
         #legend for what symbols mean
         if message == "legend":
-            print("[XX] = Face down card | C = Clubs | S = Spades  | A = Ace   | K = King\n[  ] = empty space    | H = Hearts| D = Diamonds| Q = Queen | J = Jack")
+            print("[XX] = Face down card | C = Clubs | S = Spades  | A = Ace   | K = King\n                      | H = Hearts| D = Diamonds| Q = Queen | J = Jack")
         #message for user to enter command
         if message == "enter cmd":
             print("\n(Type 'help' for list of commands)\nEnter command:")
@@ -221,5 +229,7 @@ class Game(Layout):
     def print_seperator():
         print("---------------------------------------------------------------------")
 
-game = Game()
-game.run()
+    @staticmethod
+    def spell_checker():
+        pass
+

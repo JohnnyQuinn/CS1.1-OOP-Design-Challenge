@@ -45,12 +45,20 @@ class Layout:
         """ manages an individual table"""
         tables = self.get_tables()
         for table in tables:
-            if len(table) <= 0:
-                table.append("[  ]")
+            try:
+                if not table[-1].face_up:
+                    table[-1].change_face()
+            except:
+                pass
+            
 
-    def manage_foundation(self, number):
+    def manage_foundation(self, foundation):
         """ manages an individual foundation """
-        pass
+        try:
+            card = self.get_foundations()[foundation - 1][-1].get_card_string()
+        except:
+            card = "  "
+        return card
 
     def manage_pile(self, cmd):
         """ manages the pile """
@@ -93,7 +101,7 @@ class Layout:
             for i in range(1, 14):
                 if str(i) in cmd:
                     rank = str(i)
-            suit = cmd[i].capitalize()
+            suit = cmd[1].capitalize()
             return suit + rank
 
     def get_tables(self):
@@ -103,20 +111,16 @@ class Layout:
     def get_foundations(self):
         return [self.foundation1, self.foundation2, self.foundation3, self.foundation4]
     
-    def get_last_foundation_card(self, foundation):
-        try:
-            card = self.get_foundations()[foundation - 1][-1].get_card_string()
-        except:
-            card = "[  ]"
-        return card
-    
     def move_card(self, origin, destination):
-        self.translate_cmd(destination).append(self.translate_cmd(origin)[-1])
-        self.translate_cmd(origin).remove(self.translate_cmd(origin)[-1])
-        try:
-            self.translate_cmd(origin)[len(self.translate_cmd(origin)) - 1].change_face()
-        except:
-            pass
+        origin_card = origin[-1]
+        if "K" in origin_card.get_card_string():
+            destination.append(origin_card)
+            origin.remove(origin_card)
+        else:
+            destination.append(origin_card)
+            origin.remove(origin_card)
+        self.manage_table()
+
     
     def move_group(self, origin_table, top_card, destination_table):
         top_card_index = origin_table.index(top_card)
@@ -127,6 +131,7 @@ class Layout:
                 if i == card:
                     origin_table.remove(origin_table.index(card))
         destination_table + group
+        self.manage_table()
 
     
 layout = Layout()
